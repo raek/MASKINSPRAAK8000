@@ -4,14 +4,12 @@ import Data.Map(Map)
 
 type Id = String
 
-data Abs = Abs { formals :: [Id],
-                 defs    :: Map Id Abs,
-                 app     :: [Term] }
-
-data Term = LitTerm Lit
+data Term = NumTerm Integer
+          | StrTerm String
           | VarTerm Id
           | AbsTerm Abs
 
-data Lit = NumLit Integer
-         | StrLit String
+data Abs = Abs { formals :: [Id],
+                 defs    :: Map Id Abs,
+                 app     :: [Term] }
 

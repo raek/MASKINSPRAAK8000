@@ -56,9 +56,8 @@ execCompFun env abs vals = vals'
         vals'    = map (eval env'') $ app abs
 
 eval :: Env -> Term -> Val
-eval _   (LitTerm lit) = case lit of
-                            NumLit n -> NumVal n
-                            StrLit s -> StrVal s
+eval env (NumTerm n)   = NumVal n
+eval env (StrTerm s)   = StrVal s
 eval env (VarTerm id)  = let (Just x) = Map.lookup id env
                          in x
 eval env (AbsTerm abs) = CompFun env abs
