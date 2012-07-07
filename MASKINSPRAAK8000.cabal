@@ -1,0 +1,18 @@
+Name:               maskinspraak8000
+Version:            0.1
+Description:        Toy language built on continuation passing style functions
+License:            BSD3
+License-File:       LICENSE
+Author:             Rasmus Svensson
+Maintainer:         raek@raek.se
+Build-type:         Simple
+Cabal-Version:      >= 1.2
+
+Library
+  Build-Depends:    base >= 3 && < 5, containers
+  Exposed-modules:  Maskinspraak8000.AST, Maskinspraak8000.Interpreter
+--  ghc-options:      -Wall
+
+Executable M8000
+  Main-Is:          Maskinspraak8000/Main.hs
+  Build-Depends:    base >= 3 && < 5
