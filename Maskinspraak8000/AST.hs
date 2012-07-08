@@ -21,3 +21,5 @@ data Abs = Abs { formals :: Formals,
 
 data Prog = Prog Defs App
 
+data Lib = Lib Defs
+
