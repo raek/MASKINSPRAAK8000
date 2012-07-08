@@ -9,8 +9,10 @@ Build-type:         Simple
 Cabal-Version:      >= 1.2
 
 Library
-  Build-Depends:    base >= 3 && < 5, containers
-  Exposed-modules:  Maskinspraak8000.AST, Maskinspraak8000.Interpreter
+  Build-Depends:    base >= 3 && < 5, containers, parsec
+  Exposed-modules:  Maskinspraak8000.AST,
+                    Maskinspraak8000.Interpreter,
+                    Maskinspraak8000.Parser.Lean
 --  ghc-options:      -Wall
 
 Executable M8000

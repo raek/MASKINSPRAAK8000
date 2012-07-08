@@ -1,19 +1,12 @@
 module Main where
 
-import qualified Data.Map as Map
 import Maskinspraak8000.AST
 import Maskinspraak8000.Interpreter
+import qualified Maskinspraak8000.Parser.Lean as Parser
+import Text.Parsec.String
 
-echo :: Prog
-echo = Prog (Map.fromList [("echo", Abs []
-                                        Map.empty
-                                        [VarTerm "getLine",
-                                         AbsTerm $ Abs ["s"]
-                                                       Map.empty
-                                                       [VarTerm "putStrLn",
-                                                        VarTerm "s",
-                                                        VarTerm "echo"]])])
-            [VarTerm "echo"]
-
-main = runProg echo globalEnv
+main = do echoRes <- parseFromFile Parser.program "examples/echo.M8s"
+          case echoRes of
+              Left error -> print error
+              Right echo -> runProg echo globalEnv
 
