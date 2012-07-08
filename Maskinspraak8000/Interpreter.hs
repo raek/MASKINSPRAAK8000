@@ -37,14 +37,14 @@ execSpecFun "error" [StrVal s] = return $ error s
 execSpecFun id      vals       = fmap Just $ execSpecFun' id vals
 
 execSpecFun' :: SpecId -> [Val] -> IO [Val]
-execSpecFun' "getLine"     [k]           = fmap (\l -> [k, StrVal l]) getLine
-execSpecFun' "putStrLn"    [StrVal s, k] = putStrLn s >> return [k]
-execSpecFun' "stringToNum" [StrVal s, k] = return [k, NumVal $ read s]
-execSpecFun' "numToString" [NumVal n, k] = return [k, StrVal $ show n]
+execSpecFun' "get_line"      [k]           = fmap (\l -> [k, StrVal l]) getLine
+execSpecFun' "put_str_ln"    [StrVal s, k] = putStrLn s >> return [k]
+execSpecFun' "string_to_num" [StrVal s, k] = return [k, NumVal $ read s]
+execSpecFun' "num_to_string" [NumVal n, k] = return [k, StrVal $ show n]
 
 globalEnv :: Env
 globalEnv = insertVals [(id, SpecFun id) | id <- ids] Map.empty
-    where ids = ["exit", "error", "getLine", "putStrLn", "stringToNum", "numToString"]
+    where ids = ["exit", "error", "get_line", "put_str_ln", "string_to_num", "num_to_string"]
 
 execCompFun :: Env -> Abs -> [Val] -> [Val]
 execCompFun env abs vals = vals'
