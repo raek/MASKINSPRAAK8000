@@ -9,7 +9,13 @@ data Term = NumTerm Integer
           | VarTerm Id
           | AbsTerm Abs
 
-data Abs = Abs { formals :: [Id],
-                 defs    :: Map Id Abs,
-                 app     :: [Term] }
+type Formals = [Id]
+
+type Defs = Map Id Abs
+
+type App = [Term]
+
+data Abs = Abs { formals :: Formals,
+                 defs    :: Defs,
+                 app     :: App }
 

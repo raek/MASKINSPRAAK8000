@@ -72,7 +72,7 @@ execAll vals =
            Nothing    -> return ()
            Just vals' -> execAll vals'
 
-runApp :: [Term] -> Env -> IO ()
+runApp :: App -> Env -> IO ()
 runApp terms env = execAll $ map (eval env) terms
 
 runAbs :: Abs -> [Val] -> Env -> IO ()
