@@ -12,6 +12,7 @@ Library
   Build-Depends:    base >= 3 && < 5, containers, parsec
   Exposed-modules:  Maskinspraak8000.AST,
                     Maskinspraak8000.Interpreter,
+                    Maskinspraak8000.Parser.Industrial,
                     Maskinspraak8000.Parser.Lean
 --  ghc-options:      -Wall
 
