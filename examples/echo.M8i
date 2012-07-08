@@ -1,0 +1,9 @@
+LÅT echo VARA MASKIN []
+PÅBÖRJA
+  KÖR get_line MED MASKIN [s]
+  PÅBÖRJA
+    KÖR put_str_ln MED s OCH echo
+  AVSLUTA
+AVSLUTA
+
+KÖR echo

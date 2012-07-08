@@ -1,6 +1,0 @@
-def echo [] {
-  getLine <== [s] {
-    putStrLn <== s, echo
-  }
-}
-echo <==

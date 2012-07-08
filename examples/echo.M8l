@@ -1,0 +1,6 @@
+def echo [] {
+  get_line <== [s] {
+    put_str_ln <== s, echo
+  }
+}
+echo <==

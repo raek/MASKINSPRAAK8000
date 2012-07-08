@@ -19,7 +19,7 @@ import qualified Data.Map as Map
 import qualified Maskinspraak8000.AST as AST
 
 -- lexer
-smallAlphaNum = oneOf ("åäö" ++ ['a'..'z'] ++ ['0'..'9'])
+smallAlphaNum = oneOf ("åäö_" ++ ['a'..'z'] ++ ['0'..'9'])
 
 langDef = emptyDef
            { Token.commentLine   = "KOMMENTAR"

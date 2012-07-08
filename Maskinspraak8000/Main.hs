@@ -2,14 +2,16 @@ module Main where
 
 import Maskinspraak8000.AST (Prog)
 import Maskinspraak8000.Interpreter (runProg, globalEnv)
-import Maskinspraak8000.Parser.Lean (program)
+import qualified Maskinspraak8000.Parser.Industrial as Industrial
+import qualified Maskinspraak8000.Parser.Lean as Lean
 import Text.Parsec.Prim (parse)
 import System.Environment (getArgs)
+import Data.List (isSuffixOf)
 
 type Error = String
 
 syntax :: Error
-syntax = "Syntax: M8000 program.M8s"
+syntax = "Syntax: M8000 program.{M8l,M8i}"
 
 filePathFromArgs :: [String] -> Either Error FilePath
 filePathFromArgs args = case args of
@@ -18,7 +20,10 @@ filePathFromArgs args = case args of
 
 parseProgram :: String -> String -> Either Error Prog
 parseProgram filePath fileContent =
-    case parse program filePath fileContent of
+    let program = if ".M8i" `isSuffixOf` filePath
+                  then Industrial.program
+                  else Lean.program
+    in case parse program filePath fileContent of
         Left error -> Left $ show error
         Right prog -> Right prog
 
