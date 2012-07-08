@@ -78,3 +78,6 @@ runApp terms env = execAll $ map (eval env) terms
 runAbs :: Abs -> [Val] -> Env -> IO ()
 runAbs abs vals env = execAll $ (CompFun env abs):vals
 
+runProg :: Prog -> Env -> IO ()
+runProg (Prog defs app) = runAbs (Abs [] defs app) []
+

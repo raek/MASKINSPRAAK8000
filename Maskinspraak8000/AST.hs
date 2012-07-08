@@ -19,3 +19,5 @@ data Abs = Abs { formals :: Formals,
                  defs    :: Defs,
                  app     :: App }
 
+data Prog = Prog Defs App
+
