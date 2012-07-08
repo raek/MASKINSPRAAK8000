@@ -10,7 +10,7 @@ import Text.Parsec (oneOf, sepBy)
 import Text.Parsec.Prim
 import Text.Parsec.String (Parser)
 import Text.Parsec.Combinator (option, optionMaybe)
-import qualified Text.Parsec.Token as P
+import qualified Text.Parsec.Token as Token
 import Text.Parsec.Language
 
 import Data.Functor
@@ -22,30 +22,30 @@ import qualified Maskinspraak8000.AST as AST
 smallAlphaNum = oneOf ("åäö" ++ ['a'..'z'] ++ ['0'..'9'])
 
 langDef = emptyDef
-           { P.commentLine   = "KOMMENTAR"
-           , P.identStart    = smallAlphaNum
-           , P.identLetter   = smallAlphaNum
-           , P.reservedNames = [ "MASKIN"
-                               , "PÅBÖRJA"
-                               , "AVSLUTA"
-                               , "KÖR"
-                               , "MED"
-                               , "OCH"
-                               , "LÅT"
-                               , "VARA"
-                               ]
-           , P.caseSensitive = True
+           { Token.commentLine   = "KOMMENTAR"
+           , Token.identStart    = smallAlphaNum
+           , Token.identLetter   = smallAlphaNum
+           , Token.reservedNames = [ "MASKIN"
+                                   , "PÅBÖRJA"
+                                   , "AVSLUTA"
+                                   , "KÖR"
+                                   , "MED"
+                                   , "OCH"
+                                   , "LÅT"
+                                   , "VARA"
+                                   ]
+           , Token.caseSensitive = True
            }
 
-lexer = P.makeTokenParser langDef
+lexer = Token.makeTokenParser langDef
 
-identifier = P.identifier lexer
-number     = P.integer lexer
-string     = P.stringLiteral lexer
-keyword    = P.reserved lexer
-brackets   = P.brackets lexer
-semiColon  = P.symbol lexer ";"
-whiteSpace = P.whiteSpace lexer
+identifier = Token.identifier    lexer
+number     = Token.integer       lexer
+string     = Token.stringLiteral lexer
+keyword    = Token.reserved      lexer
+brackets   = Token.brackets      lexer
+semiColon  = Token.symbol        lexer ";"
+whiteSpace = Token.whiteSpace    lexer
 
 
 -- parser
