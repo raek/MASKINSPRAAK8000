@@ -1,6 +1,7 @@
 module Maskinspraak8000.Interpreter where
 
 import Maskinspraak8000.AST
+import Data.Maybe (fromJust)
 import qualified Data.Map as Map
 
 type SpecId = String
@@ -58,8 +59,7 @@ execCompFun env abs vals = vals'
 eval :: Env -> Term -> Val
 eval env (NumTerm n)   = NumVal n
 eval env (StrTerm s)   = StrVal s
-eval env (VarTerm id)  = let (Just x) = Map.lookup id env
-                         in x
+eval env (VarTerm id)  = fromJust $ Map.lookup id env
 eval env (AbsTerm abs) = CompFun env abs
 
 absVal :: Abs -> Val
