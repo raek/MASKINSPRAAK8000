@@ -42,10 +42,14 @@ execSpecFun' "get_line"      [k]           = fmap (\l -> [k, StrVal l]) getLine
 execSpecFun' "put_str_ln"    [StrVal s, k] = putStrLn s >> return [k]
 execSpecFun' "string_to_num" [StrVal s, k] = return [k, NumVal $ read s]
 execSpecFun' "num_to_string" [NumVal n, k] = return [k, StrVal $ show n]
+execSpecFun' "eq"            [NumVal x, NumVal y, t, f] = return [if x == y then t else f]
+execSpecFun' "eq"            [StrVal x, StrVal y, t, f] = return [if x == y then t else f]
+execSpecFun' "mul"           [NumVal x, NumVal y, k] = return [k, NumVal (x * y)]
+execSpecFun' "sub"           [NumVal x, NumVal y, k] = return [k, NumVal (x - y)]
 
 globalEnv :: Env
 globalEnv = insertVals [(id, SpecFun id) | id <- ids] Map.empty
-    where ids = ["exit", "error", "get_line", "put_str_ln", "string_to_num", "num_to_string"]
+    where ids = ["exit", "error", "get_line", "put_str_ln", "string_to_num", "num_to_string", "eq", "mul", "sub"]
 
 execCompFun :: Env -> Abs -> [Val] -> [Val]
 execCompFun env abs vals = vals'
