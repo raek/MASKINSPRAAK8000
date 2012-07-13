@@ -1,0 +1,24 @@
+def fact [n, k] {
+  def fact_iter [n, acc] {
+    eq <== n, 0, [] {
+      k <== acc
+    }, [] {
+      sub <== n, 1, [new_n] {
+        mul <== acc, n, [new_acc] {
+          fact_iter <== new_n, new_acc
+        }
+      }
+    }
+  }
+  fact_iter <== n, 1
+}
+
+get_line <== [l] {
+  string_to_num <== l, [n] {
+    fact <== n, [x] {
+      num_to_string <== x, [s] {
+        put_str_ln <== s, exit
+      }
+    }
+  }
+}
