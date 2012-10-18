@@ -26,18 +26,19 @@ updateVal :: Env -> Val -> Val
 updateVal e (CompFun _ abs) = CompFun e abs
 updateVal _ x = x
 
-type ExecOutcome = IO (Maybe [Val])
+type Call        = [Val]
+type ExecOutcome = IO (Maybe Call)
 
-execStep :: [Val] -> ExecOutcome
+execStep :: Call -> ExecOutcome
 execStep (SpecFun id:vals)      = execSpecFun id vals
 execStep (CompFun env abs:vals) = return $ Just $ execCompFun env abs vals
 
-execSpecFun :: SpecId -> [Val] -> ExecOutcome
+execSpecFun :: SpecId -> Call -> ExecOutcome
 execSpecFun "exit"  []         = return Nothing
 execSpecFun "error" [StrVal s] = return $ error s
 execSpecFun id      vals       = fmap Just $ execSpecFun' id vals
 
-execSpecFun' :: SpecId -> [Val] -> IO [Val]
+execSpecFun' :: SpecId -> Call -> IO Call
 execSpecFun' "get_line"      [k]           = fmap (\l -> [k, StrVal l]) getLine
 execSpecFun' "put_str_ln"    [StrVal s, k] = putStrLn s >> return [k]
 execSpecFun' "string_to_num" [StrVal s, k] = return [k, NumVal $ read s]
@@ -51,7 +52,7 @@ globalEnv :: Env
 globalEnv = insertVals [(id, SpecFun id) | id <- ids] Map.empty
     where ids = ["exit", "error", "get_line", "put_str_ln", "string_to_num", "num_to_string", "eq", "mul", "sub"]
 
-execCompFun :: Env -> Abs -> [Val] -> [Val]
+execCompFun :: Env -> Abs -> Call -> Call
 execCompFun env abs vals = vals'
     where
         argPairs = zip (formals abs) vals
@@ -69,7 +70,7 @@ eval env (AbsTerm abs) = CompFun env abs
 absVal :: Abs -> Val
 absVal abs = CompFun undefined abs
 
-execAll :: [Val] -> IO ()
+execAll :: Call -> IO ()
 execAll vals =
     do outcome <- execStep vals
        case outcome of
@@ -79,7 +80,7 @@ execAll vals =
 runApp :: App -> Env -> IO ()
 runApp terms env = execAll $ map (eval env) terms
 
-runAbs :: Abs -> [Val] -> Env -> IO ()
+runAbs :: Abs -> Call -> Env -> IO ()
 runAbs abs vals env = execAll $ (CompFun env abs):vals
 
 runProg :: Prog -> Env -> IO ()
