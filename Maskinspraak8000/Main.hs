@@ -1,7 +1,8 @@
 module Main where
 
 import Maskinspraak8000.AST (Prog)
-import Maskinspraak8000.Interpreter (runProg, runConsole, globalEnv)
+import Maskinspraak8000.Interpreter (runProg, globalEnv)
+import Maskinspraak8000.Console (runConsole,)
 import qualified Maskinspraak8000.Parser.Industrial as Industrial
 import qualified Maskinspraak8000.Parser.Lean as Lean
 import Text.Parsec.Prim (parse)
