@@ -1,8 +1,34 @@
 module Maskinspraak8000.Interpreter where
 
 import Maskinspraak8000.AST
+import Prelude hiding (getLine, putStrLn)
+import qualified System.IO
 import Data.Maybe (fromJust)
 import qualified Data.Map as Map
+
+data ConsoleAction a = Stop a
+                     | GetLine (String -> ConsoleAction a)
+                     | PutStrLn String (ConsoleAction a)
+
+getLine :: ConsoleAction String
+getLine = GetLine Stop
+
+putStrLn :: String -> ConsoleAction ()
+putStrLn s = PutStrLn s (Stop ())
+
+instance Monad ConsoleAction where
+  return = Stop
+  (Stop x)       >>= f = f x
+  (GetLine k)    >>= f = GetLine (\s -> k s >>= f)
+  (PutStrLn s k) >>= f = PutStrLn s (k >>= f)
+
+instance Functor ConsoleAction where
+  fmap g m = m >>= (return . g)
+
+runConsole :: ConsoleAction a -> IO a
+runConsole (Stop x)       = return x
+runConsole (GetLine k)    = System.IO.getLine >>= (runConsole . k)
+runConsole (PutStrLn s k) = System.IO.putStrLn s >> (runConsole k)
 
 type SpecId = String
 
@@ -27,7 +53,7 @@ updateVal e (CompFun _ abs) = CompFun e abs
 updateVal _ x = x
 
 type Call        = [Val]
-type ExecOutcome = IO (Maybe Call)
+type ExecOutcome = ConsoleAction (Maybe Call)
 
 execStep :: Call -> ExecOutcome
 execStep (SpecFun id:vals)      = execSpecFun id vals
@@ -38,7 +64,7 @@ execSpecFun "exit"  []         = return Nothing
 execSpecFun "error" [StrVal s] = return $ error s
 execSpecFun id      vals       = fmap Just $ execSpecFun' id vals
 
-execSpecFun' :: SpecId -> Call -> IO Call
+execSpecFun' :: SpecId -> Call -> ConsoleAction Call
 execSpecFun' "get_line"      [k]           = fmap (\l -> [k, StrVal l]) getLine
 execSpecFun' "put_str_ln"    [StrVal s, k] = putStrLn s >> return [k]
 execSpecFun' "string_to_num" [StrVal s, k] = return [k, NumVal $ read s]
@@ -70,19 +96,19 @@ eval env (AbsTerm abs) = CompFun env abs
 absVal :: Abs -> Val
 absVal abs = CompFun undefined abs
 
-execAll :: Call -> IO ()
+execAll :: Call -> ConsoleAction ()
 execAll vals =
     do outcome <- execStep vals
        case outcome of
            Nothing    -> return ()
            Just vals' -> execAll vals'
 
-runApp :: App -> Env -> IO ()
+runApp :: App -> Env -> ConsoleAction ()
 runApp terms env = execAll $ map (eval env) terms
 
-runAbs :: Abs -> Call -> Env -> IO ()
+runAbs :: Abs -> Call -> Env -> ConsoleAction ()
 runAbs abs vals env = execAll $ (CompFun env abs):vals
 
-runProg :: Prog -> Env -> IO ()
+runProg :: Prog -> Env -> ConsoleAction ()
 runProg (Prog defs app) = runAbs (Abs [] defs app) []
 

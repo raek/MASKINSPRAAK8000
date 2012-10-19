@@ -1,7 +1,7 @@
 module Main where
 
 import Maskinspraak8000.AST (Prog)
-import Maskinspraak8000.Interpreter (runProg, globalEnv)
+import Maskinspraak8000.Interpreter (runProg, runConsole, globalEnv)
 import qualified Maskinspraak8000.Parser.Industrial as Industrial
 import qualified Maskinspraak8000.Parser.Lean as Lean
 import Text.Parsec.Prim (parse)
@@ -34,5 +34,5 @@ main = do args <- getArgs
                   fileContent <- readFile filePath
                   case parseProgram filePath fileContent of
                       Left error -> putStrLn error
-                      Right prog -> runProg prog globalEnv
+                      Right prog -> runConsole $ runProg prog globalEnv
 
