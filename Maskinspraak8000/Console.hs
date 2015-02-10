@@ -14,7 +14,7 @@ putStrLn :: String -> ConsoleAction ()
 putStrLn s = PutStrLn s (Stop ())
 
 instance Monad ConsoleAction where
-  return = Stop
+  return           = Stop
   (Stop x)       >>= f = f x
   (GetLine k)    >>= f = GetLine (\s -> k s >>= f)
   (PutStrLn s k) >>= f = PutStrLn s (k >>= f)
